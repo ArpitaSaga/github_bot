@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Assistant Chat</title>
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #e6edf3;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #chatbox {
+      width: 400px;
+      height: 500px;
+      background: #161b22;
+      padding: 15px;
+      border-radius: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .msg {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+      white-space: pre-wrap;
+    }
+    .bot { background-color: #238636; align-self: flex-start; }
+    .user { background-color: #1f6feb; align-self: flex-end; }
+    #input-area { margin-top: 10px; display: flex; }
+    input {
+      flex: 1; padding: 10px; border: none; border-radius: 5px;
+    }
+    button {
+      margin-left: 8px; padding: 10px 15px; border: none;
+      border-radius: 5px; background-color: #238636;
+      color: white; cursor: pointer;
+    }
+    button:hover { background-color: #2ea043; }
+  </style>
+</head>
+<body>
+  <h2>GitHub Assistant 🤖</h2>
+  <div id="chatbox"></div>
+
+  <div id="input-area">
+    <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value.trim();
+      if (!message) return;
+
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+      });
+
+      input.value = '';
+      refreshMessages();
+    }
+
+    async function refreshMessages() {
+      const res = await fetch('/messages');
+      const data = await res.json();
+
+      const chatbox = document.getElementById('chatbox');
+      chatbox.innerHTML = '';
+      data.forEach(msg => {
+        const div = document.createElement('div');
+        div.classList.add('msg', msg.sender);
+        div.textContent = msg.text;
+        chatbox.appendChild(div);
+      });
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    // Poll messages every 3 seconds (to show webhook events)
+    setInterval(refreshMessages, 3000);
+
+    // Load initial messages
+    refreshMessages();
+  </script>
+</body>
+</html>

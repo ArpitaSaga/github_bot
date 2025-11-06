@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Automation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        input, button {
+            margin: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        input {
+            width: 250px;
+        }
+        button {
+            background-color: #238636;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2ea043;
+        }
+        pre {
+            background: #161b22;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>👋 GitHub Automation App</h1>
+
+    <form method="POST">
+        <input type="text" name="owner" placeholder="Repository Owner" required><br>
+        <input type="text" name="repo" placeholder="Repository Name" required><br>
+        <input type="text" name="token" placeholder="GitHub Token" required><br>
+
+        <p>Choose action:</p>
+        <button type="submit" name="choice" value="fork">Fork Repository</button>
+        <button type="submit" name="choice" value="pull">Create Pull Request</button>
+    </form>
+
+    {% if output %}
+        <h3>Result:</h3>
+        <pre>{{ output }}</pre>
+    {% endif %}
+</body>
+</html>
